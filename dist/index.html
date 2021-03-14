@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<link rel="apple-touch-icon" href="https://www.millie.co.kr/favicon/ios-icon.png" />
+<link rel="apple-touch-icon-precomposed" href="https://www.millie.co.kr/favicon/ios-icon.png" />
+<link rel="shortcut icon" type="image/png" href="https://www.millie.co.kr/favicon/android-icon.png" />
+<title>millie PDF Viewer</title>
+    <style>
+        .nav {position:absolute;}
+        .nav button {
+            font-size:10px; background-color:#333; color:#fff; border:1px solid #fff; padding:3px;
+        }
+    </style>
+</head>
+<body>
+    <div id="milliePdf"></div>
+
+    <div class="nav">
+        <button id="prevBtn"><</button>
+        <button id="nextBtn">></button>
+        <button id="pageMode">paper</button>
+        <button id="move">100</button>
+        <button id="zoomInOutBtn">zoom off</button>
+        <button id="display">double</button>
+        <button id="effect">effect curl</button>
+        <button id="sound">sound off</button>
+        <button id="doublePage">double two</button>
+    </div>
+<script type="text/javascript" src="./src/asset/js/millie-pdf.js"></script></body>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+         window.milliePdf = new MilliePdf(document.getElementById("milliePdf"), {
+             // url: "/pdf/tea_test.pdf",
+             url: "samplePdf.pdf",
+             // url: "/pdf/now_hawaii.pdf",
+             lastPage: 20,
+             typeCode: "290", // 883: comix, 290: pdf,
+             pageMode: "paper",
+             display: "double",
+             resize: true,
+             theme: "default",
+             turnEffect: "curl", // none: 없음, slide: 슬라이드, dissolve: ?, curl: 페이지 플립,
+             password: 'G3vDco+g1p+CxBVGmOUwzk1goZEbEKH9HKceFPaHdXE=',
+             // password: '+tx41XaF/b6kV9hw0wDlZKUsU13tEgdWBpiLbGHOVNo=',
+             flipSound: 'on'
+
+         });
+
+        console.log(":::::::::::::milliePDF:::::::::::", milliePdf);
+        document.getElementById("pageMode").addEventListener("click", (e) => {
+            const pageMode = milliePdf.options.pageMode;
+            const newMode = pageMode === "paper" ? "scroll" : "paper";
+            e.target.innerHTML = newMode;
+            milliePdf.changeMode(newMode);
+        });
+        document.getElementById("move").addEventListener("click", (e) => {
+           const pageNumber = e.target.innerHTML;
+            milliePdf.display(Number(pageNumber));
+        });
+        document.getElementById("prevBtn").addEventListener("click", (e) => {
+            milliePdf.goToPrevPage();
+        });
+        document.getElementById("nextBtn").addEventListener("click", (e) => {
+            milliePdf.goToNextPage();
+        });
+        document.getElementById("zoomInOutBtn").addEventListener("click", (e) => {
+            const zoom = milliePdf.zoom.zoomMode;
+            const newZoom = zoom === "on" ? "off" : "on";
+            e.target.innerHTML = "zoom " + newZoom;
+            milliePdf.toggleZoom();
+        });
+        document.getElementById("display").addEventListener("click", (e) => {
+            const display = milliePdf.options.display;
+            const newDisplay = display === "single" ? "double" : "single";
+            e.target.innerHTML = newDisplay;
+            milliePdf.changeDisplay(newDisplay);
+        });
+        document.getElementById("effect").addEventListener("click", (e) => {
+            const effect = milliePdf.options.turnEffect;
+            const newEffect = effect === "curl" ? "none" : "curl";
+            e.target.innerHTML = "effect " + newEffect;
+            milliePdf.changeTurnEffect(newEffect);
+        });
+        document.getElementById("sound").addEventListener("click", (e) => {
+            const sound = milliePdf.options.flipSound;
+            const newSound = sound === "on" ? "off" : "on";
+            e.target.innerHTML = "sound " + newSound;
+            milliePdf.changeTurnSound(newSound);
+        });
+        document.getElementById("doublePage").addEventListener("click", (e) => {
+            const double = milliePdf.options.doubleOption;
+            const newDouble = double === "one" ? "two" : "one";
+            e.target.innerHTML = "double " + newDouble;
+            milliePdf.changeDoublePage(newDouble);
+        });
+        milliePdf.on("ready", () => {
+            console.log("~~~~~~~~~~~~~~~~~~~~~ready~~~~~~~~~~~~~~~~~~~~");
+        });
+        milliePdf.on("load", () => {
+            console.log("~~~~~~~~~~~~~~~~~~~~~~load~~~~~~~~~~~~~~~~~~~~");
+        });
+        milliePdf.on("relocate", () => {
+            console.log("~~~~~~~~~~~~~~~~~~~~~~relocate~~~~~~~~~~~~~~~~~~~~");
+        });
+        milliePdf.on("resized", () => {
+            console.log("~~~~~~~~~~~~~~~~~~~~~~resized~~~~~~~~~~~~~~~~~~~~");
+        });
+
+    });
+</script>
+</html>
